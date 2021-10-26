@@ -6,7 +6,7 @@ class ShowResult {
   static List<String> result = <String>[];
 
   static callFunctions(bool showRoute) {
-    for (var i = 1; i < result.length - 1; i++) {
+    for (var i = 2; i < result.length - 1; i++) {
       int index = pbuttons.indexWhere((element) => element.name == result[i]);
       updateFunctions[index](showRoute);
     }

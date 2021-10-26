@@ -11,4 +11,13 @@ class ShowResult {
       updateFunctions[index](showRoute);
     }
   }
+
+  static updateFunction(String name, Function onRoute) {
+    if (pbuttons.length != updateFunctions.length) {
+      updateFunctions.add(onRoute);
+    } else {
+      int index = pbuttons.indexWhere((element) => element.name == name);
+      updateFunctions[index] = onRoute;
+    }
+  }
 }

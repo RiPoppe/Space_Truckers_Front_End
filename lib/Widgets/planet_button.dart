@@ -18,23 +18,28 @@ class PlanetButton extends StatefulWidget {
 class _PlanetButtonState extends State<PlanetButton> {
   double borderWidth = 0;
   Color borderColor = Colors.white;
+
   void onPressed() async {
-    setState(() {
-      if (Dijkstra.planetPressed(widget.name)!) {
-        borderWidth = 5;
+    try {
+      setState(() {
+        if (Dijkstra.planetPressed(widget.name)!) {
+          borderWidth = 5;
+        } else {
+          borderWidth = 0;
+        }
+      });
+      if (Dijkstra.planetsPressed.length == 2 &&
+          !(ShowResult.pbuttons
+                  .indexWhere((element) => element.name == widget.name) ==
+              -1)) {
+        ShowResult.result = await Dijkstra.determineShortestPath();
+        print("The shortest path = " + ShowResult.result.toString());
+        ShowResult.callFunctions(true);
       } else {
-        borderWidth = 0;
+        ShowResult.callFunctions(false);
       }
-    });
-    if (Dijkstra.planetsPressed.length == 2 &&
-        !(ShowResult.pbuttons
-                .indexWhere((element) => element.name == widget.name) ==
-            -1)) {
-      ShowResult.result = await Dijkstra.determineShortestPath();
-      print(ShowResult.result);
-      ShowResult.callFunctions(true);
-    } else {
-      ShowResult.callFunctions(false);
+    } catch (e) {
+      //Do nothing since the expection is thrown when nothing should be done
     }
   }
 
@@ -52,8 +57,7 @@ class _PlanetButtonState extends State<PlanetButton> {
 
   @override
   Widget build(BuildContext context) {
-    ShowResult.updateFunctions.add(onRoute);
-    print("F " + ShowResult.updateFunctions.length.toString());
+    ShowResult.updateFunction(widget.name, onRoute);
     return Positioned(
       child: Tooltip(
         message: "Name: " + widget.name,

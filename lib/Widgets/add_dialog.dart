@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:space_truckers/Models/connection.dart';
 import 'package:space_truckers/Models/planet.dart';
 import 'package:space_truckers/Services/connection_service.dart';
 import 'package:space_truckers/Services/planet_service.dart';
@@ -14,8 +13,6 @@ class AddDialog extends StatefulWidget {
 }
 
 class _AddDialogState extends State<AddDialog> {
-  String url = "https://localhost:44379";
-
   final _formKey = GlobalKey<FormState>();
   bool addConnection = false;
   String name = "";
@@ -163,9 +160,9 @@ class _AddDialogState extends State<AddDialog> {
             if (_formKey.currentState!.validate()) {
               if (!addConnection) {
                 PlanetService.addPlanet(
-                    url, Planet(name: name, planetId: 0, x: x, y: y));
+                    Planet(name: name, planetId: 0, x: x, y: y));
               } else {
-                ConnectionService.addConnection(url, from, to, weight, true);
+                ConnectionService.addConnection(from, to, weight, true);
                 //TODO make it possible to create an one way connection
               }
               Navigator.pop(context, true);

@@ -4,9 +4,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:space_truckers/Models/connection.dart';
 
+import '../main.dart';
+
 class ConnectionService {
-  static Future<List<Connection>> fetchConnections(String url) async {
-    final response = await http.get(Uri.parse(url + '/Connection'));
+  static Future<List<Connection>> fetchConnections() async {
+    final response = await http.get(Uri.parse(MyApp.url + '/Connection'));
     var responseJson = json.decode(response.body);
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
@@ -19,9 +21,9 @@ class ConnectionService {
     }
   }
 
-  static Future<String> addConnection(
-      String url, String from, String to, int weight, bool both) async {
-    url = url +
+  static void addConnection(
+      String from, String to, int weight, bool both) async {
+    String url = MyApp.url +
         "/Connection?planetA=" +
         from +
         "&planetB=" +
@@ -32,15 +34,11 @@ class ConnectionService {
         weight.toString() +
         "&both=" +
         true.toString();
-    //https: //localhost:44379/Connection?planetA=A&planetB=C&weightAtoB=4&weightBtoA=33&both=true
-    //var body = (connection);
+
     var header = {"content-type": "application/json"};
-    var response = await http.post(
+    await http.post(
       Uri.parse(url),
       headers: header,
-      //body: json.encode(connection),
     );
-
-    return "yes";
   }
 }

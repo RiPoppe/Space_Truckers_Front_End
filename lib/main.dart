@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:space_truckers/Models/show_result.dart';
 import 'package:space_truckers/Screens/user_interface.dart';
 
 import 'Widgets/add_dialog.dart';
@@ -9,6 +10,7 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
+  static String url = "https://localhost:44379";
   const MyApp({Key? key}) : super(key: key);
 
   @override
@@ -32,7 +34,7 @@ class _HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<_HomeScreen> {
-  UI ui = UI();
+  UI ui = const UI();
 
   @override
   Widget build(BuildContext context) {
@@ -67,10 +69,11 @@ class _HomeScreenState extends State<_HomeScreen> {
       context: context,
       builder: (context) => const AddDialog(),
     );
-
+    ShowResult.pbuttons.clear();
+    ShowResult.updateFunctions.clear();
     if (add != null) {
       setState(() {
-        ui = UI();
+        ui = const UI();
       });
     }
   }

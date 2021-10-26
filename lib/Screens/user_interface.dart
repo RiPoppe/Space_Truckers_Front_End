@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:space_truckers/Models/connection.dart';
+import 'package:space_truckers/Models/show_result.dart';
 import 'package:space_truckers/Services/connection_service.dart';
 import 'package:space_truckers/Widgets/connection_button.dart';
 //import 'package:flutter_html/flutter_html.dart';
@@ -8,16 +9,44 @@ import '../Models/planet.dart';
 import '../Services/planet_service.dart';
 import '../Widgets/planet_button.dart';
 
-class UI extends StatelessWidget {
-  String url = "https://localhost:44379";
+class UI extends StatefulWidget {
+  const UI({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<UI> createState() => _UIState();
+}
+
+class _UIState extends State<UI> {
   late Future<List<Planet>> planets;
+
   late Future<List<Connection>> connections;
 
-  UI({Key? key}) : super(key: key);
-
   void fetchData() {
-    planets = PlanetService.fetchPlanets(url);
-    connections = ConnectionService.fetchConnections(url);
+    planets = PlanetService.fetchPlanets();
+    connections = ConnectionService.fetchConnections();
+  }
+
+  PlanetButton _buildPlanets(var item) {
+    PlanetButton button = PlanetButton(
+      item.name,
+      item.x.toDouble(), //x coordinate planet button
+      item.y.toDouble(), //y coordinate planet button
+    );
+    ShowResult.pbuttons.add(button);
+    return button;
+  }
+
+  ConnectionButton _buildConnections(var item) {
+    ConnectionButton button = ConnectionButton(
+      item.connectedWeight.toString(),
+      (item.owner.x + item.connectedTo.x) /
+          2.0, //x coordinate connection button
+      (item.owner.y + item.connectedTo.y) /
+          2.0, //y coordinate connection button
+    );
+    return button;
   }
 
   @override
@@ -39,19 +68,9 @@ class UI extends StatelessWidget {
                     alignment: Alignment.center,
                     children: [
                       for (var item in snapshotPlanet.data!)
-                        PlanetButton(
-                          item.name,
-                          item.x.toDouble(), //x coordinate planet button
-                          item.y.toDouble(), //y coordinate planet button
-                        ),
+                        _buildPlanets(item),
                       for (var item in snapshotConnection.data!)
-                        ConnectionButton(
-                          item.connectedWeight.toString(),
-                          (item.owner.x + item.connectedTo.x) /
-                              2.0, //x coordinate connection button
-                          (item.owner.y + item.connectedTo.y) /
-                              2.0, //y coordinate connection button
-                        )
+                        _buildConnections(item),
                     ],
                   ),
                 );

@@ -1,37 +1,59 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:space_truckers/Models/dijkstra.dart';
+import 'package:space_truckers/Models/show_result.dart';
+import 'package:space_truckers/main.dart';
 
 class PlanetButton extends StatefulWidget {
   final String name;
   final double x;
   final double y;
-
-  PlanetButton(this.name, this.x, this.y, {Key? key}) : super(key: key);
+  const PlanetButton(this.name, this.x, this.y, {Key? key}) : super(key: key);
 
   @override
   State<PlanetButton> createState() => _PlanetButtonState();
 }
 
 class _PlanetButtonState extends State<PlanetButton> {
-  bool isPressed = false;
-
   double borderWidth = 0;
-
-  void onPressed() {
-    isPressed = !isPressed;
-    print("pressed");
+  Color borderColor = Colors.white;
+  void onPressed() async {
     setState(() {
-      if (isPressed) {
+      if (Dijkstra.planetPressed(widget.name)!) {
         borderWidth = 5;
       } else {
         borderWidth = 0;
+      }
+    });
+    if (Dijkstra.planetsPressed.length == 2 &&
+        !(ShowResult.pbuttons
+                .indexWhere((element) => element.name == widget.name) ==
+            -1)) {
+      ShowResult.result = await Dijkstra.determineShortestPath();
+      print(ShowResult.result);
+      ShowResult.callFunctions(true);
+    } else {
+      ShowResult.callFunctions(false);
+    }
+  }
+
+  void onRoute(bool showRoute) {
+    setState(() {
+      if (!showRoute) {
+        borderColor = Colors.white;
+        borderWidth = 0;
+      } else {
+        borderColor = Colors.yellow;
+        borderWidth = 5;
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    ShowResult.updateFunctions.add(onRoute);
+    print("F " + ShowResult.updateFunctions.length.toString());
     return Positioned(
       child: Tooltip(
         message: "Name: " + widget.name,
@@ -40,11 +62,9 @@ class _PlanetButtonState extends State<PlanetButton> {
               shape: BoxShape.circle,
               border: Border.all(
                 width: borderWidth,
-                color: Colors.white,
+                color: borderColor,
               )),
           alignment: Alignment.center,
-//          margin: EdgeInsets.all(5),
-          // color: Colors.white,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
                 primary:
@@ -66,51 +86,3 @@ class _PlanetButtonState extends State<PlanetButton> {
     );
   }
 }
-
-/* import 'dart:math';
-
-import 'package:flutter/material.dart';
-
-class PlanetButton extends StatelessWidget {
-  final String name;
-  final double x;
-  final double y;
-
-  const PlanetButton(this.name, this.x, this.y, {Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      child: Tooltip(
-        message: "Name: " + name,
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              primary:
-                  Colors.primaries[Random().nextInt(Colors.primaries.length)],
-              shape: const CircleBorder(side: BorderSide.none),
-              textStyle: const TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-              )),
-          onPressed: () => null,
-          child: Text(
-            name.toUpperCase(),
-          ),
-        ),
-        /* child: RaisedButton(
-          color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
-          textColor: Colors.white,
-          shape: const CircleBorder(side: BorderSide.none),
-          child: Text(
-            name.toUpperCase(),
-            style: const TextStyle(fontSize: 20),
-          ),
-          onPressed: () => null,
-        ), */
-      ),
-      left: MediaQuery.of(context).size.width / 2 + (x),
-      top: y,
-    );
-  }
-}
- */

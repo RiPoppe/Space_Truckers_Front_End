@@ -170,6 +170,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  list_utilities:
+    dependency: transitive
+    description:
+      name: list_utilities
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   lit_starfield:
     dependency: "direct main"
     description:
@@ -315,6 +322,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.0"
+  unique_list:
+    dependency: "direct main"
+    description:
+      name: unique_list
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   vector_math:
     dependency: transitive
     description:

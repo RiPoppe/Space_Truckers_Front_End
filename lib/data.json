@@ -1,0 +1,19 @@
+[{
+    "id": 4,
+    "planet_name": "1RXS J160929.1-210524 b",
+    "starname": "1RXS J160929.1-210524",
+    "number_stars": 1,
+    "number_planets": 1,
+    "spectral_type": "K7 V",
+    "star_temp": 4060.0,
+    "star_radius": 1.0,
+    "star_mass": 1.0,
+    "right_ascencion": 242.0,
+    "declination": -21.0,
+    "distance": 139.0,
+    "alpha": 4.0,
+    "delta": 0.0,
+    "x": -60.0,
+    "y": -115.0,
+    "z": -50.0
+}]

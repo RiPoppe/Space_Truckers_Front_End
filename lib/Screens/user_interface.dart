@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:space_truckers/Models/connection.dart';
-import 'package:space_truckers/Models/show_result.dart';
+import 'package:space_truckers/Models/global_functions.dart';
 import 'package:space_truckers/Services/connection_service.dart';
 import 'package:space_truckers/Widgets/connection_button.dart';
 //import 'package:flutter_html/flutter_html.dart';
@@ -33,19 +33,21 @@ class _UIState extends State<UI> {
       item.name,
       item.x.toDouble(), //x coordinate planet button
       item.y.toDouble(), //y coordinate planet button
+      item.planetId,
     );
-    ShowResult.pbuttons.add(button);
+    GlobalFunctions.planetButtons.add(button);
     return button;
   }
 
-  ConnectionButton _buildConnections(var item) {
+  ConnectionButton _buildConnections(Connection item) {
     ConnectionButton button = ConnectionButton(
-      item.connectedWeight.toString(),
-      (item.owner.x + item.connectedTo.x) /
-          2.0, //x coordinate connection button
-      (item.owner.y + item.connectedTo.y) /
-          2.0, //y coordinate connection button
-    );
+        item.connectedWeight.toString(),
+        (item.owner.x + item.connectedTo.x) /
+            2.0, //x coordinate connection button
+        (item.owner.y + item.connectedTo.y) /
+            2.0, //y coordinate connection button
+        item.connectionId);
+    GlobalFunctions.connectionButtons.add(button);
     return button;
   }
 

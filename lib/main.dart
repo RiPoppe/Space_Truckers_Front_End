@@ -1,5 +1,7 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
-import 'package:space_truckers/Models/show_result.dart';
+import 'package:space_truckers/Models/global_functions.dart';
 import 'package:space_truckers/Screens/user_interface.dart';
 
 import 'Widgets/add_dialog.dart';
@@ -10,6 +12,7 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
+  //static String url = "https://spacetruckers2.azurewebsites.net";
   static String url = "https://localhost:44379";
   const MyApp({Key? key}) : super(key: key);
 
@@ -38,10 +41,10 @@ class _HomeScreenState extends State<_HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    GlobalFunctions.refreshUI = refresh;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        // ignore: prefer_const_constructors
         title: Center(
           child: const Text(
             "Space Truckers",
@@ -64,17 +67,22 @@ class _HomeScreenState extends State<_HomeScreen> {
     );
   }
 
+  void refresh() {
+    print("refresh");
+    setState(() {
+      ui = UI();
+    });
+  }
+
   void _addDialog(BuildContext context) async {
-    final add = await showDialog(
+    await showDialog(
       context: context,
       builder: (context) => const AddDialog(),
     );
-    ShowResult.pbuttons.clear();
-    ShowResult.updateFunctions.clear();
-    if (add != null) {
-      setState(() {
-        ui = const UI();
-      });
-    }
+    GlobalFunctions.planetButtons.clear();
+    GlobalFunctions.updateFunctionsPlanets.clear();
+    GlobalFunctions.connectionButtons.clear();
+    GlobalFunctions.updateFunctionsConnections.clear();
+    refresh();
   }
 }

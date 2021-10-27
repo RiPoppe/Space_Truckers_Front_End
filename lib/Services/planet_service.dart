@@ -30,11 +30,11 @@ class PlanetService {
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      throw Exception('Failed to load Planet');
+      throw Exception('Failed to load Planets');
     }
   }
 
-  static void addPlanet(Planet planet) async {
+  static Future addPlanet(Planet planet) async {
     String url = MyApp.url + "/Planet/";
     var header = {"content-type": "application/json"};
     await http.post(
@@ -42,5 +42,14 @@ class PlanetService {
       headers: header,
       body: json.encode(planet),
     );
+  }
+
+  static Future deletePlanet(int connectionId) async {
+    String url = MyApp.url + "/Planet/" + connectionId.toString();
+
+    await http.delete(
+      Uri.parse(url),
+    );
+    print("deleted");
   }
 }

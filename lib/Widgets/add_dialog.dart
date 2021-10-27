@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:space_truckers/Models/global_functions.dart';
 import 'package:space_truckers/Models/planet.dart';
 import 'package:space_truckers/Services/connection_service.dart';
 import 'package:space_truckers/Services/planet_service.dart';
@@ -32,6 +33,7 @@ class _AddDialogState extends State<AddDialog> {
       content: Form(
         key: _formKey,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             _buildElementSwitch(),
             addConnection ? _buildConnectionForm() : _buildPlanetForm(),
@@ -49,10 +51,14 @@ class _AddDialogState extends State<AddDialog> {
     return Column(
       children: [
         const SizedBox(
-          child: Text("Planet name"),
           height: 20,
+          child: Text("Planet name"),
         ),
         TextFormField(
+          decoration: const InputDecoration(
+            hintText: "Name",
+            border: OutlineInputBorder(),
+          ),
           validator: (val) => val!.isEmpty ? 'Enter a name' : null,
           textAlign: TextAlign.center,
           onChanged: (val) {
@@ -66,6 +72,10 @@ class _AddDialogState extends State<AddDialog> {
           height: 20,
         ),
         TextFormField(
+          decoration: const InputDecoration(
+            hintText: "X coordinate",
+            border: OutlineInputBorder(),
+          ),
           inputFormatters: [
             FilteringTextInputFormatter.allow(
               RegExp(r'^-?\d+$'),
@@ -84,6 +94,10 @@ class _AddDialogState extends State<AddDialog> {
           height: 20,
         ),
         TextFormField(
+          decoration: const InputDecoration(
+            hintText: "Y coordinate",
+            border: OutlineInputBorder(),
+          ),
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           validator: (val) => val!.isEmpty ? "Enter a number" : null,
           textAlign: TextAlign.center,
@@ -101,10 +115,14 @@ class _AddDialogState extends State<AddDialog> {
     return Column(
       children: [
         const SizedBox(
-          child: Text("Connection from planet"),
+          child: Text("Connection From"),
           height: 20,
         ),
         TextFormField(
+          decoration: const InputDecoration(
+            hintText: "Planet Name",
+            border: OutlineInputBorder(),
+          ),
           validator: (val) =>
               val!.isEmpty ? 'Enter the name of a planet' : null,
           textAlign: TextAlign.center,
@@ -115,10 +133,14 @@ class _AddDialogState extends State<AddDialog> {
           },
         ),
         const SizedBox(
-          child: Text("Connection to planet"),
+          child: Text("Connection To"),
           height: 20,
         ),
         TextFormField(
+          decoration: const InputDecoration(
+            hintText: "Planet Name",
+            border: OutlineInputBorder(),
+          ),
           validator: (val) =>
               val!.isEmpty ? 'Enter the name of a planet' : null,
           textAlign: TextAlign.center,
@@ -129,10 +151,13 @@ class _AddDialogState extends State<AddDialog> {
           },
         ),
         const SizedBox(
-          child: Text("Weight of the connection"),
+          child: Text("Connection Weight"),
           height: 20,
         ),
         TextFormField(
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+          ),
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           validator: (val) =>
               val!.isEmpty ? "Enter a number greater than 0" : null,
@@ -156,15 +181,15 @@ class _AddDialogState extends State<AddDialog> {
           child: const Icon(Icons.undo),
         ),
         ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
             if (_formKey.currentState!.validate()) {
               if (!addConnection) {
-                PlanetService.addPlanet(
+                await PlanetService.addPlanet(
                     Planet(name: name, planetId: 0, x: x, y: y));
               } else {
-                ConnectionService.addConnection(from, to, weight, true);
-                //TODO make it possible to create an one way connection
+                await ConnectionService.addConnection(from, to, weight, true);
               }
+              GlobalFunctions.refreshUI();
               Navigator.pop(context, true);
             }
           },

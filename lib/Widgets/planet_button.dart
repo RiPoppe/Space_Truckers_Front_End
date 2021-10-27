@@ -2,14 +2,16 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:space_truckers/Models/dijkstra.dart';
-import 'package:space_truckers/Models/show_result.dart';
-import 'package:space_truckers/main.dart';
+import 'package:space_truckers/Models/global_functions.dart';
+import 'package:space_truckers/Services/planet_service.dart';
 
 class PlanetButton extends StatefulWidget {
   final String name;
   final double x;
   final double y;
-  const PlanetButton(this.name, this.x, this.y, {Key? key}) : super(key: key);
+  final int planetId;
+  const PlanetButton(this.name, this.x, this.y, this.planetId, {Key? key})
+      : super(key: key);
 
   @override
   State<PlanetButton> createState() => _PlanetButtonState();
@@ -29,14 +31,14 @@ class _PlanetButtonState extends State<PlanetButton> {
         }
       });
       if (Dijkstra.planetsPressed.length == 2 &&
-          !(ShowResult.pbuttons
+          !(GlobalFunctions.planetButtons
                   .indexWhere((element) => element.name == widget.name) ==
               -1)) {
-        ShowResult.result = await Dijkstra.determineShortestPath();
-        print("The shortest path = " + ShowResult.result.toString());
-        ShowResult.callFunctions(true);
+        GlobalFunctions.result = await Dijkstra.determineShortestPath();
+        print("The shortest path = " + GlobalFunctions.result.toString());
+        GlobalFunctions.callFunctions(true);
       } else {
-        ShowResult.callFunctions(false);
+        GlobalFunctions.callFunctions(false);
       }
     } catch (e) {
       //Do nothing since the expection is thrown when nothing should be done
@@ -55,9 +57,15 @@ class _PlanetButtonState extends State<PlanetButton> {
     });
   }
 
+  void deleteConnections() async {
+    await PlanetService.deletePlanet(widget.planetId);
+
+    GlobalFunctions.refreshUI();
+  }
+
   @override
   Widget build(BuildContext context) {
-    ShowResult.updateFunction(widget.name, onRoute);
+    GlobalFunctions.updateFunction(widget.name, onRoute);
     return Positioned(
       child: Tooltip(
         message: "Name: " + widget.name,
@@ -79,6 +87,7 @@ class _PlanetButtonState extends State<PlanetButton> {
                   fontSize: 20,
                 )),
             onPressed: onPressed,
+            onLongPress: deleteConnections,
             child: Text(
               widget.name.toUpperCase(),
             ),

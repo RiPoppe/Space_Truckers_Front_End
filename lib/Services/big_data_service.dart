@@ -1,4 +1,4 @@
-/* //https://sterdbapi.azurewebsites.net/c-sharp/1
+//https://sterdbapi.azurewebsites.net/c-sharp/1
 import 'dart:async';
 import 'dart:convert';
 
@@ -28,4 +28,3 @@ class BigDataService {
     }
   }
 }
- */

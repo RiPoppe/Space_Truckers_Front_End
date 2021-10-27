@@ -1,27 +1,24 @@
-/* import 'package:flutter/material.dart';
-
 class Data {
   final double distance;
-/*   final int connectionId;
-  final int connectedWeight;
-  final Planet connectedTo;
-  final Planet owner; */
+  final int numberStars;
+  final double mass;
+  final double temperature;
+  final double radius;
   Data({
     required this.distance,
-/*     required this.connectedWeight,
-    required this.owner,
-    required this.connectedTo,
-    required this.connectionId, */
+    required this.numberStars,
+    required this.mass,
+    required this.temperature,
+    required this.radius,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) {
     return Data(
       distance: json['distance'],
-      /*      connectedWeight: json['connectedWeight'],
-      owner: Planet.fromJson(json['owner']),
-      connectedTo: Planet.fromJson(json['connectedTo']),
-      connectionId: json['connectionId'], */
+      numberStars: json['number_stars'],
+      mass: json['star_mass'],
+      radius: json['star_temp'],
+      temperature: json['star_radius'],
     );
   }
 }
- */

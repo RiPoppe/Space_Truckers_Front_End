@@ -3,7 +3,6 @@ import 'package:space_truckers/Models/connection.dart';
 import 'package:space_truckers/Models/global_functions.dart';
 import 'package:space_truckers/Services/connection_service.dart';
 import 'package:space_truckers/Widgets/connection_button.dart';
-//import 'package:flutter_html/flutter_html.dart';
 import '../Widgets/curve_painter.dart';
 import '../Models/planet.dart';
 import '../Services/planet_service.dart';

@@ -1,8 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:space_truckers/Models/big_data.dart';
 import 'package:space_truckers/Models/dijkstra.dart';
 import 'package:space_truckers/Models/global_functions.dart';
+import 'package:space_truckers/Services/big_data_service.dart';
 import 'package:space_truckers/Services/planet_service.dart';
 
 class PlanetButton extends StatefulWidget {
@@ -20,6 +22,9 @@ class PlanetButton extends StatefulWidget {
 class _PlanetButtonState extends State<PlanetButton> {
   double borderWidth = 0;
   Color borderColor = Colors.white;
+  Color buttonColor =
+      Colors.primaries[Random().nextInt(Colors.primaries.length)];
+  late Future<List<Data>> data;
 
   void onPressed() async {
     try {
@@ -65,10 +70,38 @@ class _PlanetButtonState extends State<PlanetButton> {
 
   @override
   Widget build(BuildContext context) {
+    data = BigDataService.fetchData(widget.planetId);
     GlobalFunctions.updateFunction(widget.name, onRoute);
+    return FutureBuilder<List<Data>>(
+        future: data,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasData) {
+              return _buildButton(
+                snapshot,
+                context,
+                "Name: " +
+                    widget.name +
+                    "\nDistance: " +
+                    snapshot.data![0].distance.toString() +
+                    "\n#Stars: " +
+                    snapshot.data![0].numberStars.toString() +
+                    "\nMass: " +
+                    snapshot.data![0].mass.toString() +
+                    "\nRadius: " +
+                    snapshot.data![0].radius.toString(),
+              );
+            }
+          }
+          return _buildButton(snapshot, context, "Name: " + widget.name);
+        });
+  }
+
+  Positioned _buildButton(AsyncSnapshot<List<Data>> snapshot,
+      BuildContext context, String message) {
     return Positioned(
       child: Tooltip(
-        message: "Name: " + widget.name,
+        message: message,
         child: Container(
           decoration: BoxDecoration(
               shape: BoxShape.circle,
@@ -79,8 +112,7 @@ class _PlanetButtonState extends State<PlanetButton> {
           alignment: Alignment.center,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-                primary:
-                    Colors.primaries[Random().nextInt(Colors.primaries.length)],
+                primary: buttonColor,
                 shape: const CircleBorder(side: BorderSide.none),
                 textStyle: const TextStyle(
                   color: Colors.white,

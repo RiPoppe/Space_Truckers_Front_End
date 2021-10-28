@@ -68,7 +68,6 @@ class _HomeScreenState extends State<_HomeScreen> {
   }
 
   void refresh() {
-    print("refresh");
     setState(() {
       ui = UI();
     });

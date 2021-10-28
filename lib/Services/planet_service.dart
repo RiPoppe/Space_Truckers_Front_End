@@ -44,12 +44,21 @@ class PlanetService {
     );
   }
 
+  static Future updatePlanet(Planet planet, int id) async {
+    String url = MyApp.url + "/Planet/" + id.toString();
+    var header = {"content-type": "application/json"};
+    await http.put(
+      Uri.parse(url),
+      headers: header,
+      body: json.encode(planet),
+    );
+  }
+
   static Future deletePlanet(int connectionId) async {
     String url = MyApp.url + "/Planet/" + connectionId.toString();
 
     await http.delete(
       Uri.parse(url),
     );
-    print("deleted");
   }
 }

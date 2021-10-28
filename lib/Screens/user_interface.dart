@@ -30,8 +30,8 @@ class _UIState extends State<UI> {
   PlanetButton _buildPlanets(var item) {
     PlanetButton button = PlanetButton(
       item.name,
-      item.x.toDouble(), //x coordinate planet button
-      item.y.toDouble(), //y coordinate planet button
+      item.x, //x coordinate planet button
+      item.y, //y coordinate planet button
       item.planetId,
     );
     GlobalFunctions.planetButtons.add(button);

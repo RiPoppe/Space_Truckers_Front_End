@@ -5,7 +5,6 @@ import 'package:space_truckers/Models/planet.dart';
 import 'package:space_truckers/Services/connection_service.dart';
 import 'package:space_truckers/Services/planet_service.dart';
 
-//TODO zorg ervoor dat er ook negatieve x coordinaten kunnen worden ingevuld
 class AddDialog extends StatefulWidget {
   const AddDialog({Key? key}) : super(key: key);
 
@@ -22,6 +21,25 @@ class _AddDialogState extends State<AddDialog> {
   String from = "";
   String to = "";
   int weight = 0;
+
+  bool isValidInput(String string) {
+    // Null or empty string is not a number
+    if (string.isEmpty) {
+      return false;
+    }
+
+    // Try to parse input string to number.
+    // Both integer and double work.
+    // Use int.tryParse if you want to check integer only.
+    // Use double.tryParse if you want to check double only.
+    final number = int.tryParse(string);
+
+    if (number == null) {
+      return false;
+    }
+
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,12 +94,7 @@ class _AddDialogState extends State<AddDialog> {
             hintText: "X coordinate",
             border: OutlineInputBorder(),
           ),
-          inputFormatters: [
-            FilteringTextInputFormatter.allow(
-              RegExp(r'^-?\d+$'),
-            )
-          ],
-          validator: (val) => val!.isEmpty ? "Enter a number" : null,
+          validator: (val) => !isValidInput(val!) ? "Enter a number" : null,
           textAlign: TextAlign.center,
           onChanged: (val) {
             setState(() {
@@ -98,8 +111,7 @@ class _AddDialogState extends State<AddDialog> {
             hintText: "Y coordinate",
             border: OutlineInputBorder(),
           ),
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          validator: (val) => val!.isEmpty ? "Enter a number" : null,
+          validator: (val) => !isValidInput(val!) ? "Enter a number" : null,
           textAlign: TextAlign.center,
           onChanged: (val) {
             setState(() {
@@ -109,6 +121,19 @@ class _AddDialogState extends State<AddDialog> {
         ),
       ],
     );
+  }
+
+  bool isExistingPlanet(String val) {
+    bool result = false;
+    //TODO check if planet exists
+
+    for (var planet in GlobalFunctions.planetButtons) {
+      if (planet.name == val) {
+        result = true;
+      }
+    }
+
+    return result;
   }
 
   Column _buildConnectionForm() {
@@ -123,8 +148,9 @@ class _AddDialogState extends State<AddDialog> {
             hintText: "Planet Name",
             border: OutlineInputBorder(),
           ),
-          validator: (val) =>
-              val!.isEmpty ? 'Enter the name of a planet' : null,
+          validator: (val) => !isExistingPlanet(val!)
+              ? 'Enter the name of an existing planet'
+              : null,
           textAlign: TextAlign.center,
           onChanged: (val) {
             setState(() {
@@ -141,8 +167,9 @@ class _AddDialogState extends State<AddDialog> {
             hintText: "Planet Name",
             border: OutlineInputBorder(),
           ),
-          validator: (val) =>
-              val!.isEmpty ? 'Enter the name of a planet' : null,
+          validator: (val) => !isExistingPlanet(val!)
+              ? 'Enter the name of an existing planet'
+              : null,
           textAlign: TextAlign.center,
           onChanged: (val) {
             setState(() {

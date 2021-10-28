@@ -26,7 +26,6 @@ class Dijkstra {
         planetsPressed[0] +
         "&to=" +
         planetsPressed[1]);
-    print(uri);
     final response = await http.get(uri);
     var responseJson = json.decode(response.body);
     if (response.statusCode == 200) {

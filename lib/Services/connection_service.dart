@@ -48,6 +48,5 @@ class ConnectionService {
     await http.delete(
       Uri.parse(url),
     );
-    print("deleted");
   }
 }

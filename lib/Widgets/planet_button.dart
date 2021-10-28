@@ -6,11 +6,12 @@ import 'package:space_truckers/Models/dijkstra.dart';
 import 'package:space_truckers/Models/global_functions.dart';
 import 'package:space_truckers/Services/big_data_service.dart';
 import 'package:space_truckers/Services/planet_service.dart';
+import 'package:space_truckers/Widgets/update_dialog.dart';
 
 class PlanetButton extends StatefulWidget {
   final String name;
-  final double x;
-  final double y;
+  final int x;
+  final int y;
   final int planetId;
   const PlanetButton(this.name, this.x, this.y, this.planetId, {Key? key})
       : super(key: key);
@@ -97,6 +98,14 @@ class _PlanetButtonState extends State<PlanetButton> {
         });
   }
 
+  void _updateDialog(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (context) =>
+          UpdateDialog(widget.name, widget.planetId, widget.x, widget.y),
+    );
+  }
+
   Positioned _buildButton(AsyncSnapshot<List<Data>> snapshot,
       BuildContext context, String message) {
     return Positioned(
@@ -110,18 +119,21 @@ class _PlanetButtonState extends State<PlanetButton> {
                 color: borderColor,
               )),
           alignment: Alignment.center,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                primary: buttonColor,
-                shape: const CircleBorder(side: BorderSide.none),
-                textStyle: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                )),
-            onPressed: onPressed,
-            onLongPress: deleteConnections,
-            child: Text(
-              widget.name.toUpperCase(),
+          child: GestureDetector(
+            onDoubleTap: () => _updateDialog(context),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  primary: buttonColor,
+                  shape: const CircleBorder(side: BorderSide.none),
+                  textStyle: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                  )),
+              onPressed: onPressed,
+              onLongPress: deleteConnections,
+              child: Text(
+                widget.name.toUpperCase(),
+              ),
             ),
           ),
         ),

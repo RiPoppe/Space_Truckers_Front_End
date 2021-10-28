@@ -19,7 +19,6 @@ class BigDataService {
 
       var result =
           (responseJson as List).map((data) => Data.fromJson(data)).toList();
-      print(result);
       return result;
     } else {
       // If the server did not return a 200 OK response,

@@ -22,23 +22,23 @@ class _AddDialogState extends State<AddDialog> {
   String to = "";
   int weight = 0;
 
-  bool isValidInput(String string) {
-    // Null or empty string is not a number
-    if (string.isEmpty) {
-      return false;
-    }
-
-    // Try to parse input string to number.
-    // Both integer and double work.
-    // Use int.tryParse if you want to check integer only.
-    // Use double.tryParse if you want to check double only.
-    final number = int.tryParse(string);
-
+  String? isInvalidInput(String string, bool isX) {
+    int? number = int.tryParse(string);
     if (number == null) {
-      return false;
+      return "Enter a number";
     }
 
-    return true;
+    int minx = -MediaQuery.of(context).size.width ~/ 2;
+    int maxx = MediaQuery.of(context).size.width ~/ 2;
+    int maxy = (MediaQuery.of(context).size.height).toInt();
+
+    if (!isX && (number < 0 || number > maxy)) {
+      return "Enter a number between 0 and $maxy";
+    } else if (isX && (number < minx || number > maxx)) {
+      return "Enter a number between $minx & $maxx";
+    }
+
+    return null;
   }
 
   @override
@@ -94,7 +94,7 @@ class _AddDialogState extends State<AddDialog> {
             hintText: "X coordinate",
             border: OutlineInputBorder(),
           ),
-          validator: (val) => !isValidInput(val!) ? "Enter a number" : null,
+          validator: (val) => isInvalidInput(val!, true),
           textAlign: TextAlign.center,
           onChanged: (val) {
             setState(() {
@@ -111,7 +111,7 @@ class _AddDialogState extends State<AddDialog> {
             hintText: "Y coordinate",
             border: OutlineInputBorder(),
           ),
-          validator: (val) => !isValidInput(val!) ? "Enter a number" : null,
+          validator: (val) => isInvalidInput(val!, false),
           textAlign: TextAlign.center,
           onChanged: (val) {
             setState(() {
@@ -186,8 +186,9 @@ class _AddDialogState extends State<AddDialog> {
             border: OutlineInputBorder(),
           ),
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          validator: (val) =>
-              val!.isEmpty ? "Enter a number greater than 0" : null,
+          validator: (val) => (val!.isEmpty && int.tryParse(val)! > 0)
+              ? "Enter a number greater than 0"
+              : null,
           textAlign: TextAlign.center,
           onChanged: (val) {
             setState(() {

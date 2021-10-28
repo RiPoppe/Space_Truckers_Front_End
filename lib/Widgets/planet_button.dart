@@ -6,7 +6,7 @@ import 'package:space_truckers/Models/dijkstra.dart';
 import 'package:space_truckers/Models/global_functions.dart';
 import 'package:space_truckers/Services/big_data_service.dart';
 import 'package:space_truckers/Services/planet_service.dart';
-import 'package:space_truckers/Widgets/update_dialog.dart';
+import 'package:space_truckers/Widgets/update_planet_dialog.dart';
 
 class PlanetButton extends StatefulWidget {
   final String name;
@@ -102,7 +102,7 @@ class _PlanetButtonState extends State<PlanetButton> {
     await showDialog(
       context: context,
       builder: (context) =>
-          UpdateDialog(widget.name, widget.planetId, widget.x, widget.y),
+          UpdatePlanetDialog(widget.name, widget.planetId, widget.x, widget.y),
     );
   }
 

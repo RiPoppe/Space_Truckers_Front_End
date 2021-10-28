@@ -3,41 +3,48 @@ import 'package:space_truckers/Models/global_functions.dart';
 import 'package:space_truckers/Models/planet.dart';
 import 'package:space_truckers/Services/planet_service.dart';
 
-class UpdateDialog extends StatefulWidget {
+class UpdatePlanetDialog extends StatefulWidget {
   final String name;
   final int planetId;
   final int x;
   final int y;
 
-  const UpdateDialog(this.name, this.planetId, this.x, this.y, {Key? key})
+  const UpdatePlanetDialog(this.name, this.planetId, this.x, this.y, {Key? key})
       : super(key: key);
 
   @override
-  _UpdateDialogState createState() => _UpdateDialogState();
+  _UpdatePlanetDialogState createState() => _UpdatePlanetDialogState();
 }
 
-class _UpdateDialogState extends State<UpdateDialog> {
-  int x = 0;
-  int y = 0;
+class _UpdatePlanetDialogState extends State<UpdatePlanetDialog> {
+  int? x = 0;
+  int? y = 0;
   final _formKey = GlobalKey<FormState>();
 
-  bool isValidInput(String string) {
-    // Null or empty string is not a number
-    if (string.isEmpty) {
-      return false;
-    }
+  @override
+  void initState() {
+    super.initState();
+    x = widget.x;
+    y = widget.y;
+  }
 
-    // Try to parse input string to number.
-    // Both integer and double work.
-    // Use int.tryParse if you want to check integer only.
-    // Use double.tryParse if you want to check double only.
-    final number = int.tryParse(string);
-
+  String? isInvalidInput(String string, bool isX) {
+    int? number = int.tryParse(string);
     if (number == null) {
-      return false;
+      return "Enter a number";
     }
 
-    return true;
+    int minx = -MediaQuery.of(context).size.width ~/ 2;
+    int maxx = MediaQuery.of(context).size.width ~/ 2;
+    int maxy = (MediaQuery.of(context).size.height).toInt();
+
+    if (!isX && (number < 0 || number > maxy)) {
+      return "Enter a number between 0 and $maxy";
+    } else if (isX && (number < minx || number > maxx)) {
+      return "Enter a number between $minx & $maxx";
+    }
+
+    return null;
   }
 
   @override
@@ -57,17 +64,21 @@ class _UpdateDialogState extends State<UpdateDialog> {
               child: Text("X coordinate"),
             ),
             TextFormField(
-              initialValue: widget.x.toString(),
+              initialValue: x.toString(),
               //TextInputType.numberWithOptions(signed: true, decimal: false),
               decoration: const InputDecoration(
                 hintText: "number",
                 border: OutlineInputBorder(),
               ),
               textAlign: TextAlign.center,
-              validator: (val) => !isValidInput(val!) ? "Enter a number" : null,
+              validator: (val) => isInvalidInput(val!, true),
               onChanged: (val) {
                 setState(() {
-                  x = int.tryParse(val)!;
+                  try {
+                    x = int.tryParse(val)!;
+                  } catch (e) {
+                    x = null;
+                  }
                 });
               },
             ),
@@ -76,17 +87,20 @@ class _UpdateDialogState extends State<UpdateDialog> {
               child: Text("Y coordinate"),
             ),
             TextFormField(
-              initialValue: widget.y.toString(),
+              initialValue: y.toString(),
               decoration: const InputDecoration(
                 hintText: "number",
                 border: OutlineInputBorder(),
               ),
               textAlign: TextAlign.center,
-              validator: (val) =>
-                  val!.isEmpty ? "Enter a number greater than 0" : null,
+              validator: (val) => isInvalidInput(val!, false),
               onChanged: (val) {
                 setState(() {
-                  y = int.tryParse(val)!;
+                  try {
+                    y = int.tryParse(val)!;
+                  } catch (e) {
+                    y = null;
+                  }
                 });
               },
             ),
@@ -113,7 +127,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
             if (_formKey.currentState!.validate()) {
               PlanetService.updatePlanet(
                 Planet(
-                    name: widget.name, planetId: widget.planetId, x: x, y: y),
+                    name: widget.name, planetId: widget.planetId, x: x!, y: y!),
                 widget.planetId,
               );
               GlobalFunctions.refreshUI();

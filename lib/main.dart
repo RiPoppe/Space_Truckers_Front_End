@@ -12,8 +12,8 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
-  //static String url = "https://spacetruckers2.azurewebsites.net";
-  static String url = "https://localhost:44379";
+  static String url = "https://spacetruckers2.azurewebsites.net";
+  //static String url = "https://localhost:44379";
   const MyApp({Key? key}) : super(key: key);
 
   @override
